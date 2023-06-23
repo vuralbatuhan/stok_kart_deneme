@@ -605,6 +605,15 @@ public class New_Stok_Kart {
 				txtCopyKDVTipi.setText("");
 				txtCopyAciklama.setText("");
 				txtCopyOlusturmaTarihi.setText("");
+				
+				lblNewLabel.setText("");
+				lblNewLabel_1.setText("");
+				lblNewLabel_2.setText("");
+				lblNewLabel_3.setText("");
+				lblNewLabel_4.setText("");
+				lblNewLabel_5.setText("");
+				lblNewLabel_6.setText("");
+				lblNewLabel_7.setText("");
 			}
 		});
 		btnNewButton_2.setForeground(Color.BLUE);
