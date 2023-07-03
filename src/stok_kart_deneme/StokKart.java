@@ -84,4 +84,5 @@ public class StokKart {
 		this.olusturmaTarihi = olusturmaTarihi;
 	}
 
+
 }
