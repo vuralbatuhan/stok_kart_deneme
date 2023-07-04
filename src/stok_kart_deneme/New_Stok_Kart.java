@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
+import javax.swing.MenuSelectionManager;
 import javax.swing.RowFilter;
 import javax.swing.JLabel;
 import java.awt.event.KeyAdapter;
@@ -23,10 +24,13 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JPanel;
 import java.awt.SystemColor;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+
 import java.awt.Font;
 import java.awt.Color;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLayeredPane;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import com.toedter.calendar.JCalendar;
@@ -37,15 +41,13 @@ import javax.swing.JScrollPane;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.security.PublicKey;
+import javax.swing.JPopupMenu;
+import java.awt.Component;
+import javax.swing.JMenuBar;
 
 public class New_Stok_Kart {
 
 	private JFrame frame;
-
-	/**
-	 * Launch the application.
-	 */
-	
 	DefaultTableModel model;
 	private JTable tblStokKart;
 	private JTextField txtSearch;
@@ -72,6 +74,7 @@ public class New_Stok_Kart {
 	private JButton btnNewButton;
 	private JButton btnNewButton_2;
 	private JTextField textField;
+	private JTextField textField_1;
 	
 	public ArrayList<StokKart> getStokKarts() throws SQLException{
 		Connection connection = null;
@@ -110,16 +113,12 @@ public class New_Stok_Kart {
 			}
 		});
 	}
-
-	/**
-	 * Create the application.
-	 */
-	
-
 	
 	public New_Stok_Kart() {
 		initialize();
 		populateTable();
+		
+		
 		
 	}
 	
@@ -153,9 +152,6 @@ public class New_Stok_Kart {
 		}
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	private void initialize(){
 		frame = new JFrame();
 		frame.getContentPane().setBackground(new Color(192, 192, 192));
@@ -173,6 +169,7 @@ public class New_Stok_Kart {
 				tableRowSorter.setRowFilter(RowFilter.regexFilter(searchkeyString));
 			}
 		});
+		
 		txtSearch.setBounds(157, 70, 418, 33);
 		frame.getContentPane().add(txtSearch);
 		txtSearch.setColumns(10);
@@ -189,17 +186,15 @@ public class New_Stok_Kart {
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
 		
+
+		
+		
+		
 		txtStokkodu = new JTextField();
 		txtStokkodu.setBounds(141, 68, 114, 27);
 		panel.add(txtStokkodu);
 		txtStokkodu.setColumns(10);
-		
-//		String[] arr = {"","1","2","3"};
-//		JComboBox cmbBxStokTipi = new JComboBox(arr);
-//		cmbBxStokTipi.setBounds(141, 155, 114, 27);
-//		panel.add(cmbBxStokTipi);
-//		
-		
+	
 		JDateChooser dateChooser = new JDateChooser();
 		dateChooser.setDateFormatString("yyyy-MM-dd ");
 		dateChooser.getCalendarButton().addActionListener(new ActionListener() {
@@ -330,29 +325,60 @@ public class New_Stok_Kart {
 		txtAciklama.setBounds(405, 155, 114, 27);
 		panel.add(txtAciklama);
 		
+		
+		
 		btnSave_1 = new JButton("UPDATE");
 		btnSave_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Connection connection = null;
 				DbHelper helper = new DbHelper();
 				PreparedStatement preparedStatement = null;
+				
 				try {
-					String id = textField.getText();
 					connection = helper.getConnection();
-					String sql = "UPDATE stok_kart set Stok_Kodu=? , Stok_Adı=? , Stok_Tipi=? , Birimi=?, Barkodu=?, KDV_Tipi=?, Açıklama=?, Oluşturma_Tarihi=? where Stok_Kodu='"+id+"'";
+					String sql = "select * from stok_kart where Stok_Kodu= '"+txtStokkodu.getText()+"'";
 					preparedStatement = connection.prepareStatement(sql);
-					preparedStatement.setString(1, txtStokkodu.getText());
-					preparedStatement.setString(2, txtStokAdi.getText());
-					preparedStatement.setObject(3, cmbBxStokTipi.getSelectedItem());
-					preparedStatement.setObject(4, cmbBxBirimi.getSelectedItem());
-					preparedStatement.setString(5, txtBarkodu.getText());
-					preparedStatement.setObject(6, cmbBxKDVTipi.getSelectedItem());
-					preparedStatement.setString(7, txtAciklama.getText());
-					preparedStatement.setObject(8, dateChooser.getDate());
-					int result = preparedStatement.executeUpdate();
-					populateTable();
-				}catch(SQLException e3){
+					ResultSet resultSet = preparedStatement.executeQuery();
+					if(resultSet.next()==true) 
+					{
+						
+						String stokKodu = resultSet.getString(1);
+						String stokAdi = resultSet.getString(2);
+						String stokTipi = resultSet.getString(3);
+						String birimi = resultSet.getString(4);
+						String barkodu = resultSet.getString(5);
+						String kdvTipi = resultSet.getString(6);
+						String aciklama = resultSet.getString(7);
+						String olusturmaTarihi = resultSet.getString(8);
+						
+						String sql2 = "update stok_kart set Stok_Kodu=? , Stok_Adı=? , Stok_Tipi=? , Birimi=?, Barkodu=?, KDV_Tipi=?, Açıklama=?, Oluşturma_Tarihi=? where Stok_Kodu= '"+textField.getText()+"'";
+						preparedStatement = connection.prepareStatement(sql2);
+						preparedStatement.setString(1, txtStokkodu.getText());
+						preparedStatement.setString(2, txtStokAdi.getText());
+						preparedStatement.setObject(3, cmbBxStokTipi.getSelectedItem());
+						preparedStatement.setObject(4, cmbBxBirimi.getSelectedItem());
+						preparedStatement.setString(5, txtBarkodu.getText());
+						preparedStatement.setObject(6, cmbBxKDVTipi.getSelectedItem());
+						preparedStatement.setString(7, txtAciklama.getText());
+						preparedStatement.setObject(8, dateChooser.getDate());
+						int result = preparedStatement.executeUpdate();
+						populateTable();
+						
+
+								
+					}
+					}
+						
+					catch(SQLException e3){
 					helper.showErrorMessage(e3);
+				}finally {
+					
+					try {
+						preparedStatement.close();
+						connection.close();
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}		
 				}
 
 			}
@@ -417,28 +443,36 @@ public class New_Stok_Kart {
 		btnDelete_1 = new JButton("DELETE");
 		btnDelete_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Connection connection = null;
-				DbHelper helper = new DbHelper();
-				PreparedStatement preparedStatement = null;
-				try {
-					String id = textField.getText();
-					connection = helper.getConnection();
-					String sql = "DELETE FROM stok_kart where Stok_Kodu = '"+id+"' ";
-					preparedStatement = connection.prepareStatement(sql);
+			Connection connection = null;
+			DbHelper helper = new DbHelper();
+			PreparedStatement preparedStatement = null;
+			try {
+				connection = helper.getConnection();
+				String sql = "select * from stok_kart where Stok_Kodu= '"+txtStokkodu.getText()+"'";
+				preparedStatement = connection.prepareStatement(sql);
+				ResultSet resultSet = preparedStatement.executeQuery();
+				if(resultSet.next()==true) 
+				{
+					
+					String sql2 = "delete from stok_kart where Stok_Kodu= '"+txtStokkodu.getText()+"'";
+					preparedStatement = connection.prepareStatement(sql2);
 					int result = preparedStatement.executeUpdate();
 					populateTable();
-					JOptionPane.showMessageDialog(btnSave, "KART SİLİNDİ");
-				}catch(SQLException e3){
-					helper.showErrorMessage(e3);
+					
 				}
-				   txtStokkodu.setText("");
-				   txtStokAdi.setText("");
-				   cmbBxStokTipi.setSelectedIndex(0);
-				   cmbBxBirimi.setSelectedIndex(0);
-	               txtBarkodu.setText("");
-				   cmbBxKDVTipi.setSelectedIndex(0);
-				   txtAciklama.setText("");
-				   dateChooser.setDate(null);
+				}
+					
+				catch(SQLException e3){
+				helper.showErrorMessage(e3);
+			}finally {
+				
+				try {
+					preparedStatement.close();
+					connection.close();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}		
+			}
 			}
 		});
 		btnDelete_1.setForeground(new Color(0, 0, 205));
@@ -446,56 +480,6 @@ public class New_Stok_Kart {
 		btnDelete_1.setBackground(Color.LIGHT_GRAY);
 		btnDelete_1.setBounds(319, 338, 123, 38);
 		panel.add(btnDelete_1);
-		
-		JButton btnCopyy = new JButton("COPY");
-		btnCopyy.setBackground(new Color(192, 192, 192));
-		btnCopyy.setForeground(new Color(0, 0, 255));
-		btnCopyy.setFont(new Font("Yu Gothic UI", Font.BOLD, 14));
-		btnCopyy.setBounds(219, 386, 123, 38);
-		panel.add(btnCopyy);
-		btnCopyy.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Connection connection = null;
-				DbHelper helper = new DbHelper();
-				PreparedStatement preparedStatement = null;
-				try {
-					connection = helper.getConnection();
-					String sql = "insert into stok_kart () values(?,?,?,?,?,?,?,?)";
-					preparedStatement = connection.prepareStatement(sql);
-					preparedStatement.setString(1, txtStokkodu.getText());
-					preparedStatement.setString(2, txtStokAdi.getText());
-					preparedStatement.setObject(3, cmbBxStokTipi.getSelectedItem());
-					preparedStatement.setObject(4, cmbBxBirimi.getSelectedItem());
-					preparedStatement.setString(5, txtBarkodu.getText());
-					preparedStatement.setObject(6, cmbBxKDVTipi.getSelectedItem());
-					preparedStatement.setString(7, txtAciklama.getText());
-					preparedStatement.setObject(8, dateChooser.getDate());
-					int result = preparedStatement.executeUpdate();
-					populateTable();
-					JOptionPane.showMessageDialog(btnSave, "KART EKLENDİ");
-				}catch(SQLException e3){
-					helper.showErrorMessage(e3);
-				}finally {
-					
-					try {
-						preparedStatement.close();
-						connection.close();
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}	
-				}
-				   txtStokkodu.setText("");
-				   txtStokAdi.setText("");
-				   cmbBxStokTipi.setSelectedIndex(0);
-				   cmbBxBirimi.setSelectedIndex(0);
-	               txtBarkodu.setText("");
-				   cmbBxKDVTipi.setSelectedIndex(0);
-				   txtAciklama.setText("");
-				   dateChooser.setDate(null);
-				   
-			}
-			
-		});
 		scrollPane.setBounds(18, 130, 541, 358);
 		frame.getContentPane().add(scrollPane);
 		
@@ -505,9 +489,77 @@ public class New_Stok_Kart {
 			public void mouseClicked(MouseEvent e) {
 				int index = tblStokKart.getSelectedRow();
 				ShowItem(index);
+				textField.setText(txtStokkodu.getText());
+//				if(SwingUtilities.isRightMouseButton(e)) {	
+//					System.out.println("sasdsadas");
+//				}
+				JButton btnNewButton_1 = new JButton("Copy");
+				
+				JMenuBar menuBar = new JMenuBar();
+				menuBar.setBounds(120, 510, 339, 42);
+				frame.getContentPane().add(menuBar);
+				
+				JLabel lblNewLabel_1 = new JLabel("Yeni Stok Kodunu Giriniz");
+				lblNewLabel_1.setBackground(new Color(192, 192, 192));
+				menuBar.add(lblNewLabel_1);
+				
+				textField_1 = new JTextField();
+				menuBar.add(textField_1);
+				textField_1.setColumns(10);
+				menuBar.add(btnNewButton_1);
+				
+				btnNewButton_1.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						Connection connection = null;
+						DbHelper helper = new DbHelper();
+						PreparedStatement preparedStatement = null;
+						try {
+							connection = helper.getConnection();
+							String sql = "select * from stok_kart where Stok_Kodu= '"+txtStokkodu.getText()+"'";
+							preparedStatement = connection.prepareStatement(sql);
+							ResultSet resultSet = preparedStatement.executeQuery();
+							if(resultSet.next()==true) 
+							{
+								String id2 = textField_1.getText();
+								String stokKodu = resultSet.getString(1);
+								String stokAdi = resultSet.getString(2);
+								String stokTipi = resultSet.getString(3);
+								String birimi = resultSet.getString(4);
+								String barkodu = resultSet.getString(5);
+								String kdvTipi = resultSet.getString(6);
+								String aciklama = resultSet.getString(7);
+								String olusturmaTarihi = resultSet.getString(8);
+								
+								String sql2 = "insert into stok_kart () values(?,?,?,?,?,?,?,?)";
+								preparedStatement = connection.prepareStatement(sql2);
+								preparedStatement.setString(1, textField_1.getText());
+								preparedStatement.setString(2, stokAdi);
+								preparedStatement.setObject(3, stokTipi);
+								preparedStatement.setObject(4, birimi);
+								preparedStatement.setString(5, barkodu);
+								preparedStatement.setObject(6, kdvTipi);
+								preparedStatement.setString(7, aciklama);
+								preparedStatement.setObject(8, olusturmaTarihi);
+								int result = preparedStatement.executeUpdate();
+								populateTable();										
+							}
+							}
+								
+							catch(SQLException e3){
+							helper.showErrorMessage(e3);
+						}finally {
+							
+							try {
+								preparedStatement.close();
+								connection.close();
+							} catch (SQLException e1) {
+								e1.printStackTrace();
+							}		
+						}
+					}
+				});
 			}
 		});
-
 		tblStokKart.setForeground(new Color(102, 102, 102));
 		tblStokKart.setBackground(new Color(152, 251, 152));
 		scrollPane.setViewportView(tblStokKart);
@@ -524,7 +576,6 @@ public class New_Stok_Kart {
 		lblNewLabel.setBounds(54, 33, 93, 13);
 		frame.getContentPane().add(lblNewLabel);
 		
-
 		tblStokKart.getColumnModel().getColumn(0).setPreferredWidth(85);
 		tblStokKart.getColumnModel().getColumn(1).setPreferredWidth(85);
 		tblStokKart.getColumnModel().getColumn(2).setPreferredWidth(85);
@@ -533,6 +584,22 @@ public class New_Stok_Kart {
 		tblStokKart.getColumnModel().getColumn(5).setPreferredWidth(85);
 		tblStokKart.getColumnModel().getColumn(6).setPreferredWidth(85);
 		tblStokKart.getColumnModel().getColumn(7).setPreferredWidth(85);
-
 }
+	private static void addPopup(Component component, final JPopupMenu popup) {
+		component.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			public void mouseReleased(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			private void showMenu(MouseEvent e) {
+				popup.show(e.getComponent(), e.getX(), e.getY());
+			}
+		});
+	}
 }
