@@ -7,13 +7,16 @@ import view.StokKartiFrame;
 
 public class StokKartiFrameController {
 	private StokKartiFrame iFrame;
+	private StokKartiArrayListController iStokKartiArrayListController;
 	public StokKartiFrameController() {
 		Init();
 	}
 
 	private void Init() {
 		iFrame = new StokKartiFrame();
+		iStokKartiArrayListController = new StokKartiArrayListController(iFrame);
 		setListeners();
+		iStokKartiArrayListController.populateTable();
 		iFrame.setVisible(true);		
 	}
 	

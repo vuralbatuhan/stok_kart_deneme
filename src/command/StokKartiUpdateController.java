@@ -12,12 +12,14 @@ import view.StokKartiFrame;
 
 public class StokKartiUpdateController implements ActionListener {
 
+	private StokKartiArrayListController iStokKartiArrayListController;
 	private StokKartiFrame iFrame;
 	public StokKartiUpdateController(StokKartiFrame iFrame) {
 		this.iFrame = iFrame;
 	}
 	
 	public void updateModel() {
+		iStokKartiArrayListController = new StokKartiArrayListController(iFrame);
 		Connection connection = null;
 		DbHelper helper = new DbHelper();
 		PreparedStatement preparedStatement = null;
@@ -30,14 +32,6 @@ public class StokKartiUpdateController implements ActionListener {
 			if(resultSet.next()==true) 
 			{
 				
-				String stokKodu = resultSet.getString(1);
-				String stokAdi = resultSet.getString(2);
-				String stokTipi = resultSet.getString(3);
-				String birimi = resultSet.getString(4);
-				String barkodu = resultSet.getString(5);
-				String kdvTipi = resultSet.getString(6);
-				String aciklama = resultSet.getString(7);
-				String olusturmaTarihi = resultSet.getString(8);
 				
 				String sql2 = "update stok_kart set Stok_Kodu=? , Stok_Adı=? , Stok_Tipi=? , Birimi=?, Barkodu=?, KDV_Tipi=?, Açıklama=?, Oluşturma_Tarihi=? where Stok_Kodu= '"+iFrame.txtStokkodu.getText()+"'";
 				preparedStatement = connection.prepareStatement(sql2);
@@ -50,7 +44,7 @@ public class StokKartiUpdateController implements ActionListener {
 				preparedStatement.setString(7, iFrame.txtAciklama.getText());
 				preparedStatement.setObject(8, iFrame.dateChooser.getDate());
 				int result = preparedStatement.executeUpdate();
-				iFrame.populateTable();
+				iStokKartiArrayListController.populateTable();
 				
 
 						

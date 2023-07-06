@@ -17,12 +17,14 @@ import view.StokKartiFrame;
 
 public class StokKartiCopyController implements ActionListener {
 
+	private StokKartiArrayListController iStokKartiArrayListController;
 	private StokKartiFrame iFrame;
     public StokKartiCopyController(StokKartiFrame iFrame) {
     	this.iFrame = iFrame;
     }
     
     public void copyModel() {
+    	iStokKartiArrayListController = new StokKartiArrayListController(iFrame);
 		Connection connection = null;
 		DbHelper helper = new DbHelper();
 		PreparedStatement preparedStatement = null;
@@ -55,7 +57,7 @@ public class StokKartiCopyController implements ActionListener {
 				preparedStatement.setString(6, aciklama);
 				preparedStatement.setObject(7, olusturmaTarihi);
 				int result = preparedStatement.executeUpdate();
-				iFrame.populateTable();										
+				iStokKartiArrayListController.populateTable();										
 			}
 			}
 				

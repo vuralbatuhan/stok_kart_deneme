@@ -12,12 +12,14 @@ import view.StokKartiFrame;
 
 public class StokKartiDeleteController implements ActionListener {
 
+	private StokKartiArrayListController iStokKartiArrayListController;
 	private StokKartiFrame iFrame;
 	public StokKartiDeleteController(StokKartiFrame iFrame) {
 		this.iFrame = iFrame;
 	}
 	
 	public void deleteModel() {
+		iStokKartiArrayListController = new StokKartiArrayListController(iFrame);
 		Connection connection = null;
 		DbHelper helper = new DbHelper();
 		PreparedStatement preparedStatement = null;
@@ -32,7 +34,7 @@ public class StokKartiDeleteController implements ActionListener {
 				String sql2 = "delete from stok_kart where Stok_Kodu= '"+iFrame.txtStokkodu.getText()+"'";
 				preparedStatement = connection.prepareStatement(sql2);
 				int result = preparedStatement.executeUpdate();
-				iFrame.populateTable();
+				iStokKartiArrayListController.populateTable();
 				
 			}
 			}

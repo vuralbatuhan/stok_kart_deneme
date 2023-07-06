@@ -38,13 +38,14 @@ import view.StokKartiFrame;
 
 public class StokKartiSaveController implements ActionListener{
 	
+	private StokKartiArrayListController iStokKartiArrayListController;
 	private StokKartiFrame iFrame;
 	public StokKartiSaveController(StokKartiFrame iFrame) {
 		this.iFrame = iFrame;
 	}
 	
 	public void saveModel() {
-
+		    iStokKartiArrayListController = new StokKartiArrayListController(iFrame);
 			Connection connection = null;
 			DbHelper helper = new DbHelper();
 			PreparedStatement preparedStatement = null;
@@ -61,7 +62,7 @@ public class StokKartiSaveController implements ActionListener{
 				preparedStatement.setObject(7, iFrame.txtAciklama.getText());
 				preparedStatement.setObject(8, iFrame.dateChooser.getDate());
 				int result = preparedStatement.executeUpdate();
-				iFrame.populateTable();
+				iStokKartiArrayListController.populateTable();
 			}catch(SQLException e3){
 				helper.showErrorMessage(e3);
 			}finally {

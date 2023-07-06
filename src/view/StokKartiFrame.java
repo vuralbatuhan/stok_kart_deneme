@@ -90,45 +90,9 @@ public class StokKartiFrame extends JFrame {
 	public JDateChooser dateChooser;
 	public JPanel panel;
 
-	public ArrayList<StokKart> getStokKarts() {
-		Connection connection = null;
-		DbHelper helper = new DbHelper();
-		Statement statement = null;
-		ResultSet resultSet;
-		ArrayList<StokKart> stokKarts=null;
-		try {
-			connection = helper.getConnection();
-			statement = connection.createStatement();
-			resultSet = statement.executeQuery("select * from stok_kart");
-			stokKarts = new ArrayList<StokKart>();
-			while(resultSet.next()) {
-				stokKarts.add(new StokKart(resultSet.getString("Stok_Kodu"), resultSet.getString("Stok_Adı"), resultSet.getString("Stok_Tipi"), resultSet.getString("Birimi"), resultSet.getString("Barkodu"), resultSet.getDouble("KDV_Tipi"), resultSet.getString("Açıklama"), resultSet.getString("Oluşturma_tarihi")));
-			}
-		}catch(SQLException e){
-			helper.showErrorMessage(e);		
-		}
-		finally{
-		}
-		return stokKarts;
-	}
-	public void populateTable() {
-		model = (DefaultTableModel)tblStokKart.getModel();
-		model.setRowCount(0);
-		try {
-			ArrayList<StokKart> stokKarts = getStokKarts();
-			for(StokKart stokKart : stokKarts) {
-				Object[] rowObjects = {stokKart.getStokKodu(), stokKart.getStokAdi(), stokKart.getStokTipi(), stokKart.getBirimi(), stokKart.getBarkodu(), stokKart.getKdvTipi(), stokKart.getAciklama(), stokKart.getOlusturmaTarihi()};
-			    model.addRow(rowObjects);
-			}
-			
-		} catch (Exception e2) {
-			e2.printStackTrace();
-		}
-	}
-	
+
 	public StokKartiFrame() {
-		initialize();
-		populateTable();		
+		initialize();	
 	}
 
 	private void initialize(){

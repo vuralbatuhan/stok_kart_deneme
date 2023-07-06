@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Date;
+
 public class StokKart {
 	private String stokKodu;
 	private String stokAdi;
@@ -8,9 +10,9 @@ public class StokKart {
 	private String barkodu;
 	private double kdvTipi;
 	private String aciklama;
-	private String olusturmaTarihi;
+	private Date olusturmaTarihi;
 	
-	public StokKart(String stokKodu, String stokAdi,String stokTipi,String birimi,String barkodu,double kdvTipi,String aciklama,String olusturmaTarihi) {
+	public StokKart(String stokKodu, String stokAdi,String stokTipi,String birimi,String barkodu,double kdvTipi,String aciklama,Date olusturmaTarihi) {
 		this.setStokKodu(stokKodu);
 		this.setStokAdi(stokAdi);
 		this.setStokTipi(stokTipi);
@@ -76,11 +78,11 @@ public class StokKart {
 		this.aciklama = aciklama;
 	}
 
-	public String getOlusturmaTarihi() {
+	public Date getOlusturmaTarihi() {
 		return olusturmaTarihi;
 	}
 
-	public void setOlusturmaTarihi(String olusturmaTarihi) {
+	public void setOlusturmaTarihi(Date olusturmaTarihi) {
 		this.olusturmaTarihi = olusturmaTarihi;
 	}
 
