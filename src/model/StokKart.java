@@ -1,4 +1,4 @@
-package stok_kart_deneme;
+package model;
 
 public class StokKart {
 	private String stokKodu;

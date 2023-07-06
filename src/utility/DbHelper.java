@@ -1,4 +1,4 @@
-package stok_kart_deneme;
+package utility;
 
 import java.sql.*;
 
